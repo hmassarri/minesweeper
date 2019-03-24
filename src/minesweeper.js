@@ -1,38 +1,78 @@
-//Create an arrow function (function name = parameter => function code)
-/*
-const printBoard = board => {
-  console.log('Current board: ');
-  console.log(board[0].join(' | '));
-  console.log(board[1].join(' | '));
-  console.log(board[2].join(' | '));
-};
-*/
+//Chapter 11 - New code
 
-//Refactor to loop through the array
-function printBoard(board) {
-  console.log('Current Board: ');
-  for (i = 0; i < board.length; i++) {
-    console.log(board[i].join(' | '));
+//Declare arrow function
+const generatePlayerBoard = (numberOfRows, numberOfColumns) => {
+
+  //Create empty board array
+  let board = [];
+
+  //Loop through numOfRows
+  for (let i = 0; i < numberOfRows; i++) {
+
+    //Represents single row added to board
+    let row = [];
+
+    //Number of empty spaces added to array must match numberOfColumns
+    for (let x = 0; x < numberOfColumns; x++) {
+      row.push(' ');
+    }
+
+    //Push row into board array
+    board.push(row);
   }
-  console.log('');
-}
+  return board;
+};
 
-//Create the board array of 3 elements of 3 pairs [x][y]
-let board = [
-  [' ', ' ', ' '],
-  [' ', ' ', ' '],
-  [' ', ' ', ' ']
-];
+//console.log(generatePlayerBoard(3, 3));
 
 
-//Print the board
-printBoard(board);
+const generateBombBoard = (numberOfRows, numberOfColumns, numberOfBombs) => {
 
-//Acess first line of board and change second element to '1'
-board[0][1] = '1';
+  //Create empty board array
+  let board = [];
 
-//Access the third line and set the third element to 'B'
-board[2][2] = 'B';
+  //Loop through numOfRows
+  for (let i = 0; i < numberOfRows; i++) {
 
-//Print the board
-printBoard(board);
+    //Represents single row added to board
+    let row = [];
+
+    //Number of empty spaces added to array must match numberOfColumns
+    for (let x = 0; x < numberOfColumns; x++) {
+      row.push(null);
+    }
+    //Push row into board array
+    board.push(row);
+  }
+
+  //Bomb counter - has the potential to place bombs on top of already existing bombs
+  //Will need to fix this
+  let numberOfBombsPlaced = 0;
+  while (numberOfBombsPlaced != numberOfBombs) {
+    //Generate a random row
+    const randomRowIndex = Math.floor(Math.random() * numberOfRows);
+
+    //Generate a random column
+    const randomColumnIndex = Math.floor(Math.random() *numberOfColumns);
+
+    //Assign to board with a value of B
+    board[randomRowIndex][randomColumnIndex] = 'B';
+
+    //Incrememnt counter
+    numberOfBombsPlaced++;
+  }
+
+  return board;
+
+};
+
+const printBoard = board => {
+  //Join the array elements with a '|' and then add a new line after
+  console.log(board.map(row => row.join(' | ')).join('\n'));
+};
+
+console.log('Player Board:');
+printBoard(generatePlayerBoard(3,3));
+console.log(' ');
+console.log('Bomb Board');
+printBoard(generateBombBoard(10,10,5));
