@@ -17,10 +17,10 @@ class Game {
   }
 }
 
-
 class Board {
   constructor(numberOfRows, numberOfColumns, numberOfBombs) {
     this._numberOfBombs = numberOfBombs;
+
     this._numberOfTiles = numberOfRows * numberOfColumns;
     this._playerBoard = Board.generatePlayerBoard(numberOfRows, numberOfColumns);
     this._bombBoard = Board.generateBombBoard(numberOfRows, numberOfColumns, numberOfBombs);
@@ -36,11 +36,10 @@ class Board {
       console.log('This tile has already been flipped');
       return;
     }
-    else if (hasSafeTiles()) {
-      this._playerBoard[rowIndex][columnIndex].push('B');
-    }
-    else {
-      this._playerBoard[rowIndex][columnIndex] = this.getNumberOfNeighborBombs(rowIndex, columnIndex);
+    if (this._bombBoard[rowIndex][columnIndex] === 'B') {
+      this._playerBoard[rowIndex][columnIndex] = 'B';
+    } else {
+      this._playerBoard[rowIndex][columnIndex] = 'B';
     }
     this._numberOfTiles--;
   }
@@ -77,72 +76,62 @@ class Board {
 
   hasSafeTiles() {
     return this._numberOfTiles !== this._numberOfBombs
-    }
   }
 
-
-}
-
-
-  //Bomb counter - has the potential to place bombs on top of already existing bombs
-  //Will need to fix this
-
-  let numberOfBombsPlaced = 0;
-
-  while (numberOfBombsPlaced != numberOfBombs) {
-    //Generate a random row
-    let randomRowIndex = Math.floor(Math.random() * numberOfRows);
-    //Generate a random column
-    let randomColumnIndex = Math.floor(Math.random() *numberOfColumns);
-
-    if(board[randomRowIndex][randomColumnIndex] !== 'B') {
-      //Assign to board with a value of B
-      board[randomRowIndex][randomColumnIndex] = 'B';
-      //Incrememnt counter
-      numberOfBombsPlaced++;
-    }
+  print() {
+    //Join the array elements with a '|' and then add a new line after
+    console.log(this._playerBoard.map(row => row.join(' | ')).join('\n'));
   }
-  return board;
-}
 
-print(){
-  //Join the array elements with a '|' and then add a new line after
-  console.log(this._playerBoard.map(row => row.join(' | ')).join('\n'));
-};
-
-//Declare arrow function
-static generatePlayerBoard(numberOfRows, numberOfColumns) {
-  //Create empty board array
-  let board = [];
-  //Loop through numOfRows
-  for (let i = 0; i < numberOfRows; i++) {
-    //Represents single row added to board
-    let row = [];
-    //Number of empty spaces added to array must match numberOfColumns
-    for (let x = 0; x < numberOfColumns; x++) {
-      row.push(' ');
+  //Declare arrow function
+  static generatePlayerBoard(numberOfRows, numberOfColumns) {
+    //Create empty board array
+    const board = [];
+    //Loop through numOfRows
+    for (let i = 0; i < numberOfRows; i++) {
+      //Represents single row added to board
+      let row = [];
+      //Number of empty spaces added to array must match numberOfColumns
+      for (let x = 0; x < numberOfColumns; x++) {
+        row.push(' ');
+      }
+      //Push row into board array
+      board.push(row);
     }
-    //Push row into board array
-    board.push(row);
+    return board;
   }
-  return board;
-};
 
-
-generateBombBoard(numberOfRows, numberOfColumns, numberOfBombs) {
-  //Create empty board array
-  let board = [];
-  //Loop through numOfRows
-  for (let i = 0; i < this._numberOfRows; i++) {
-    //Represents single row added to board
-    let row = [];
-    //Number of empty spaces added to array must match numberOfColumns
-    for (let x = 0; x < this._numberOfColumns; x++) {
-      row.push(null);
+  static generateBombBoard(numberOfRows, numberOfColumns, numberOfBombs) {
+    //Create empty board array
+    let board = [];
+    //Loop through numOfRows
+    for (let i = 0; i < numberOfRows; i++) {
+      //Represents single row added to board
+      let row = [];
+      //Number of empty spaces added to array must match numberOfColumns
+      for (let x = 0; x < numberOfColumns; x++) {
+        row.push(null);
+      }
+      //Push row into board array
+      board.push(row);
     }
-    //Push row into board array
-    board.push(row);
+    //Bomb counter - has the potential to place bombs on top of already existing bombs
+    //Will need to fix this
+    let numberOfBombsPlaced = 0;
+
+    while (numberOfBombsPlaced < numberOfBombs) {
+      const randomRowIndex = Math.floor(Math.random() * numberOfRows);
+      const randomColumnIndex = Math.floor(Math.random() * numberOfColumns);
+      if (board[randomRowIndex][randomColumnIndex] !== 'B') {
+        board[randomRowIndex][randomColumnIndex] = 'B';
+        numberOfBombsPlaced++;
+      }
+    }
+    return board;
   }
 }
 
-const g = new Game(3,3,3);
+
+const g = new Game(3, 3, 3);
+g.playMove(-1,0);
+g.playMove(0,0);
